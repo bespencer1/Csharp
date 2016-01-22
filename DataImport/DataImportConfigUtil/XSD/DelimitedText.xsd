@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DelimitedText"
+    targetNamespace="http://tempuri.org/DelimitedText.xsd"
+    elementFormDefault="qualified"
+    xmlns="http://tempuri.org/DelimitedText.xsd"
+    xmlns:mstns="http://tempuri.org/DelimitedText.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+  <xs:element name="Config" type="mstns:ConfigurationType" />
+  
+  <xs:complexType name="ConfigurationType">
+
+    <xs:sequence>
+      <xs:element name="Columns" type="ColumnsType" minOccurs="1" maxOccurs="1" />
+    </xs:sequence>
+    
+    <xs:attribute name="Name" type="xs:string" use="required"/>
+    <xs:attribute name="File_Pattern" type="xs:string" use="required"/>
+    <xs:attribute name="Source_Folder" type="xs:string" use="required"/>
+    <xs:attribute name="Working_Folder" type="xs:string" use="required"/>
+    <xs:attribute name="Archive_Folder" type="xs:string" use="required"/>
+    <xs:attribute name="File_Type" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="DelimitedText"/>
+          <xs:enumeration value="FixedText"/>
+          <xs:enumeration value="Excel"/>
+          <xs:enumeration value="XML"/>
+          <xs:enumeration value="JSON"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>    
+    <xs:attribute name="Column_Delimiter" type="xs:string" use="required"/>
+    <xs:attribute name="Row_Delimiter" type="xs:string" use="required"/>    
+  </xs:complexType>
+
+  <xs:complexType name="ColumnsType">
+    <xs:sequence>
+      <xs:element name="Column" type="ColumnType" minOccurs="1" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ColumnType">
+    <xs:attribute name="Table_Column" type="xs:string" use="optional"/>
+    <xs:attribute name="Display_Name" type="xs:string" use="required"/>
+    <xs:attribute name="Position" use="required" type="xs:positiveInteger"/>
+    <xs:attribute name="Type" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="Text"/>
+          <xs:enumeration value="Number"/>
+          <xs:enumeration value="Decimal"/>
+          <xs:enumeration value="Date"/>
+          <xs:enumeration value="DateTime"/>
+          <xs:enumeration value="Time"/>
+          <xs:enumeration value="ID"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Max_Length" type="xs:positiveInteger" use="required"/>
+    <xs:attribute name="IsRequired" type="xs:boolean" use="required"/>
+    <xs:attribute name="RegEx" type="xs:string" use="optional"/>
+  </xs:complexType>
+  
+</xs:schema>

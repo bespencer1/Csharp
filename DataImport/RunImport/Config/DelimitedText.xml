@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Config Name="Test" 
+  File_Pattern="Delimited_*.txt" 
+  Source_Folder="C:\Projects\DataImport\Source" 
+  Working_Folder="C:\Projects\DataImport\Working" 
+  Archive_Folder="C:\Projects\DataImport\Archive" 
+  File_Type="DelimitedText" 
+  Column_Delimiter="|" 
+  Row_Delimiter="\r\n" 
+  Has_Header="false" 
+  Full_Refresh="true" 
+  Connection_String="CLTSQLDVPPS1\dvPPSINST1" 
+  Batch_Size="10000" 
+  Table_Name="dbo.utds_Test" 
+  Data_Sproc="dbo.upds_ProcessData" 
+  Report_Sproc="dbo_upds_ValidationReport" 
+  Report_Format="HTML" 
+  Report_Transfer="EMAIL" 
+  Report_Email_To="bspencer@lashgroup.com">
+  <!-- todo: 
+  
+  Full_Refesh: add logic to determine if file received is latest, ignore if not 
+  Data_Sproc
+  Trigger file type - finish processing when all files have been received
+  
+  -->
+  <Columns>
+    <Column Table_Column="Column1" Display_Name="Column 1" Position="1" Type="ID" Max_Length="15" IsRequired="true" />
+    <Column Table_Column="Column2" Display_Name="Column 2" Position="2" Type="Text" Max_Length="50" IsRequired="false" />
+    <Column Table_Column="Column3" Display_Name="Column 3" Position="3" Type="Number" Max_Length="15" IsRequired="false" />
+    <Column Table_Column="Column4" Display_Name="Column 4" Position="4" Type="Decimal" Max_Length="15" IsRequired="false" RegEx="####0.0##" />
+    <Column Table_Column="Column5" Display_Name="Column 5" Position="5" Type="Date" Max_Length="10" IsRequired="false" RegEx="/(0?[1-9]|1[0-2])\/(0?[1-9]|[12]\d|3[01])\/([12]\d{3}|\d\d)/" />
+    <Column Table_Column="Column6" Display_Name="Column 6" Position="6" Type="DateTime" Max_Length="19" IsRequired="false" RegEx="" />
+  </Columns>
+</Config>
