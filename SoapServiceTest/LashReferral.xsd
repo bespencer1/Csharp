@@ -1,0 +1,382 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns="http://LashGroup/Referral" targetNamespace="http://LashGroup/Referral" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:annotation>
+    <xsd:documentation>Last Modified: 2012-08-14.  Version 1.0.1</xsd:documentation>
+  </xsd:annotation>
+  <xsd:element name="Referral" type="transaction">
+  </xsd:element>
+  <xsd:complexType name="transaction">
+    <xsd:annotation>
+      <xsd:documentation>Root complex element for the schema</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="1" name="Patients">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="unbounded" name="Patient" type="patient" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="Version" type="xsd:string" use="required" />
+    <xsd:attribute name="TransactionID" type="xsd:string" use="required" />
+    <xsd:attribute name="TransactionDate" type="xsd:date" use="required" />
+    <xsd:attribute name="LashSystemID" type="xsd:string" use="required" />
+  </xsd:complexType>
+  <xsd:complexType name="address">
+    <xsd:annotation>
+      <xsd:documentation>Complex Element for standard address information</xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="AddressType" type="addressType" use="required" />
+    <xsd:attribute name="Address1" type="lengthRestriction" use="required" />
+    <xsd:attribute name="Address2" type="lengthRestriction" use="optional" />
+    <xsd:attribute name="City" type="lengthRestriction" use="required" />
+    <xsd:attribute name="State" type="stateRestriction" use="required" />
+    <xsd:attribute name="Zip" type="zipRestriction" use="required" />
+    <xsd:attribute name="Zip4" type="xsd:string" use="optional" />
+  </xsd:complexType>
+  <xsd:complexType name="addresses">
+    <xsd:annotation>
+      <xsd:documentation>Complex Element for list of addresses</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="unbounded" name="Address" type="address" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="phone">
+    <xsd:annotation>
+      <xsd:documentation>Complex Element for standard phone information</xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="PhoneType" type="phoneType" use="required" />
+    <xsd:attribute name="Number" type="phoneRestriction" use="required" />
+  </xsd:complexType>
+  <xsd:complexType name="phones">
+    <xsd:annotation>
+      <xsd:documentation>Complex Element for list of phones</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="unbounded" name="Phone" type="phone" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="pslnumber">
+    <xsd:annotation>
+      <xsd:documentation>Complex Element for standard provider state license number information</xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="Number" type="xsd:string" use="required" />
+    <xsd:attribute name="State" type="stateRestriction" use="required" />
+    <xsd:attribute name="Status" type="xsd:string" use="required" />
+  </xsd:complexType>
+  <xsd:complexType name="pslnumbers">
+    <xsd:annotation>
+      <xsd:documentation>Complex Element for list of provider state license numbers</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="unbounded" name="PSLNumber" type="pslnumber" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="paymentcard">
+    <xsd:annotation>
+      <xsd:documentation>Complex Element for payment card information</xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="Number" type="xsd:string" use="required" />
+    <xsd:attribute name="ExpDate" type="expdateRestriction" use="optional" />
+  </xsd:complexType>
+  <xsd:complexType name="paymentcards">
+    <xsd:annotation>
+      <xsd:documentation>Complex Element for list of payment cards</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="unbounded" name="PaymentCard" type="paymentcard" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="contact">
+    <xsd:annotation>
+      <xsd:documentation>Complex Element for standard contact information</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="1" name="Addresses" type="addresses" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="Phones" type="phones" />
+    </xsd:sequence>
+    <xsd:attribute name="FirstName" type="lengthRestriction" use="required" />
+    <xsd:attribute name="LastName" type="lengthRestriction" use="required" />
+    <xsd:attribute name="MiddleInitial" type="middleInitRestriction" use="optional" />
+    <xsd:attribute name="Email" type="lengthRestriction" use="optional" />
+    <xsd:attribute name="Gender" type="genderType" use="optional" />
+    <xsd:attribute name="Language" type="lengthRestriction" use="optional" />
+    <xsd:attribute name="PrefContactMethod" type="contactmethodType" use="optional" />
+    <xsd:attribute name="RelationshipToPatient" type="relationshipType" use="optional" />
+    <xsd:attribute name="VendorID" type="lengthRestriction" use="optional" />
+    <xsd:attribute name="LashID" type="lengthRestriction" use="optional" />
+  </xsd:complexType>
+  <xsd:complexType name="patient">
+    <xsd:annotation>
+      <xsd:documentation>Complex Element for patient contact information</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="contact">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Providers" type="providers" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="Sites" type="sites" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="PaymentCards" type="paymentcards" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="PatientDiagnosis" type="patientdiagnosis" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="Questions" type="questions" />
+        </xsd:sequence>
+        <xsd:attribute name="DOB" type="dateRestriction" use="optional" />
+        <xsd:attribute name="SSN" type="ssnRestriction" use="optional" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="provider">
+    <xsd:annotation>
+      <xsd:documentation>Complex Element for provider contact information</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="contact">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="PSLNumbers" type="pslnumbers" />
+        </xsd:sequence>
+        <xsd:attribute name="ProviderType" type="providerType" use="required" />
+        <xsd:attribute name="Title" type="lengthRestriction" use="required" />
+        <xsd:attribute name="Specialty" type="specialtyType" use="optional" />
+        <xsd:attribute name="DEA" type="tenlengthRestriction" use="optional" />
+        <xsd:attribute name="DEADate" type="dateRestriction" use="optional" />
+        <xsd:attribute name="TaxID" type="tenlengthRestriction" use="optional" />
+        <xsd:attribute name="NPI" type="tenlengthRestriction" use="optional" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="providers">
+    <xsd:annotation>
+      <xsd:documentation>Complex Element for list of providers</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="unbounded" name="Provider" type="provider" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="site">
+    <xsd:annotation>
+      <xsd:documentation>Complex Element for site information</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="1" name="Addresses" type="addresses" />
+      <xsd:element minOccurs="1" maxOccurs="1" name="Phones" type="phones" />
+    </xsd:sequence>
+    <xsd:attribute name="SiteType" type="siteType" use="required" />
+    <xsd:attribute name="Name" type="xsd:string" use="required" />
+  </xsd:complexType>
+  <xsd:complexType name="sites">
+    <xsd:annotation>
+      <xsd:documentation>Complex Element for list of sites</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="unbounded" name="Site" type="site" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="diagnosis">
+    <xsd:annotation>
+      <xsd:documentation>Complex Element for diagnosis information</xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="DiagnosisCode" type="xsd:string" use="required" />
+    <xsd:attribute name="DiagnosisDate" type="dateRestriction" use="required" />
+  </xsd:complexType>
+  <xsd:complexType name="patientdiagnosis">
+    <xsd:annotation>
+      <xsd:documentation>Complex Element for list of patient diagnosis</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="unbounded" name="Diagnosis" type="diagnosis" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="question">
+    <xsd:annotation>
+      <xsd:documentation>Complex Element for a Question</xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="Text" type="xsd:string" use="required" />
+    <xsd:attribute name="Answer" type="xsd:string" use="required" />
+  </xsd:complexType>
+  <xsd:complexType name="questions">
+    <xsd:annotation>
+      <xsd:documentation>Complex Element for a list Questions</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="unbounded" name="Question" type="question" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:simpleType name="lengthRestriction">
+    <xsd:annotation>
+      <xsd:documentation>String must have length between 1 and 50.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1" />
+      <xsd:maxLength value="50" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="tenlengthRestriction">
+    <xsd:annotation>
+      <xsd:documentation>String must have length between 1 and 50.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1" />
+      <xsd:maxLength value="10" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="middleInitRestriction">
+    <xsd:annotation>
+      <xsd:documentation>String must be 1 character.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1" />
+      <xsd:maxLength value="1" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="stateRestriction">
+    <xsd:annotation>
+      <xsd:documentation>String must 2 characters.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="2" />
+      <xsd:maxLength value="2" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="zipRestriction">
+    <xsd:annotation>
+      <xsd:documentation>Must be 5 numbers</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="([0-9][0-9][0-9][0-9][0-9])" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="phoneRestriction">
+    <xsd:annotation>
+      <xsd:documentation>Must be 10 numbers</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="([0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ssnRestriction">
+    <xsd:annotation>
+      <xsd:documentation>String with pattern of MM/DD/YYYY</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="([0-9][0-9][0-9])[-]([0-9][0-9])[-]([0-9][0-9][0-9][0-9])" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="dateRestriction">
+    <xsd:annotation>
+      <xsd:documentation>String with pattern of MM/DD/YYYY</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="([1-2][0-9][0-9][0-9])[-](0[1-9]|1[0-2])[-](0[1-9]|[12][0-9]|3[01])" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="expdateRestriction">
+    <xsd:annotation>
+      <xsd:documentation>String with pattern of MM/YYYY</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="(0[1-9]|1[0-2])[//]([1-2][0-9][0-9][0-9])" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="addressType">
+    <xsd:annotation>
+      <xsd:documentation>String with restriction to list</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="Billing" />
+      <xsd:enumeration value="Correspondence" />
+      <xsd:enumeration value="Shipping" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="phoneType">
+    <xsd:annotation>
+      <xsd:documentation>String with restriction to list</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="Home Phone" />
+      <xsd:enumeration value="Home Fax" />
+      <xsd:enumeration value="Office Phone" />
+      <xsd:enumeration value="Office Fax" />
+      <xsd:enumeration value="Mobile Phone" />
+      <xsd:enumeration value="Billing Phone" />
+      <xsd:enumeration value="Billing Fax" />
+      <xsd:enumeration value="Correspondence Phone" />
+      <xsd:enumeration value="Correspondence Fax" />
+      <xsd:enumeration value="Shipping Phone" />
+      <xsd:enumeration value="Shipping Fax" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="providerType">
+    <xsd:annotation>
+      <xsd:documentation>String with restriction to list</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="Referring" />
+      <xsd:enumeration value="Treating" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="siteType">
+    <xsd:annotation>
+      <xsd:documentation>String with restriction to list</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="Treating" />
+      <xsd:enumeration value="Therapy" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="genderType">
+    <xsd:annotation>
+      <xsd:documentation>String with restriction to list</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="F" />
+      <xsd:enumeration value="M" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="contactmethodType">
+    <xsd:annotation>
+      <xsd:documentation>String with restriction to list</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="Phone" />
+      <xsd:enumeration value="Mail" />
+      <xsd:enumeration value="Email" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="specialtyType">
+    <xsd:annotation>
+      <xsd:documentation>String with restriction to list</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="Dermatology" />
+      <xsd:enumeration value="Family Practitioner" />
+      <xsd:enumeration value="Gastroenterology" />
+      <xsd:enumeration value="General Practitioner" />
+      <xsd:enumeration value="Immunology" />
+      <xsd:enumeration value="Infectious Disease" />
+      <xsd:enumeration value="Internal Medicine" />
+      <xsd:enumeration value="Nephrology" />
+      <xsd:enumeration value="Neurology" />
+      <xsd:enumeration value="Neuropsychiatry" />
+      <xsd:enumeration value="Oncology" />
+      <xsd:enumeration value="Ophthalmology" />
+      <xsd:enumeration value="Other" />
+      <xsd:enumeration value="Psychiatry" />
+      <xsd:enumeration value="Pulmonology" />
+      <xsd:enumeration value="Rheumatology" />
+      <xsd:enumeration value="Womens Health, Urology" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="relationshipType">
+    <xsd:annotation>
+      <xsd:documentation>String with restriction to list</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="Other" />
+      <xsd:enumeration value="Healthcare Provider" />
+      <xsd:enumeration value="Retail Pharmacist" />
+      <xsd:enumeration value="Self" />
+      <xsd:enumeration value="Specialty Pharmacist" />
+    </xsd:restriction>
+  </xsd:simpleType>
+</xsd:schema>

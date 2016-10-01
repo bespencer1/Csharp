@@ -1,0 +1,351 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="AllocationModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="AllocationModelStoreContainer">
+          <EntitySet Name="Assignment_Allocation" EntityType="AllocationModel.Store.Assignment_Allocation" store:Type="Tables" Schema="bs" />
+          <EntitySet Name="Assignments" EntityType="AllocationModel.Store.Assignments" store:Type="Tables" Schema="bs" />
+          <EntitySet Name="Resources" EntityType="AllocationModel.Store.Resources" store:Type="Tables" Schema="bs" />
+          <EntitySet Name="WeekEnding" EntityType="AllocationModel.Store.WeekEnding" store:Type="Tables" Schema="bs" />
+          <EntitySet Name="vw_Assignment_Allocation" EntityType="AllocationModel.Store.vw_Assignment_Allocation" store:Type="Views" store:Schema="bs" store:Name="vw_Assignment_Allocation">
+            <DefiningQuery>SELECT 
+      [vw_Assignment_Allocation].[Assignment_ID] AS [Assignment_ID], 
+      [vw_Assignment_Allocation].[Developer] AS [Developer], 
+      [vw_Assignment_Allocation].[PTR] AS [PTR], 
+      [vw_Assignment_Allocation].[Client] AS [Client], 
+      [vw_Assignment_Allocation].[Priority] AS [Priority], 
+      [vw_Assignment_Allocation].[Dev_Due_Date] AS [Dev_Due_Date], 
+      [vw_Assignment_Allocation].[Dev_Estimate] AS [Dev_Estimate], 
+      [vw_Assignment_Allocation].[Hrs_Completed] AS [Hrs_Completed], 
+      [vw_Assignment_Allocation].[Hrs_Remaining] AS [Hrs_Remaining], 
+      [vw_Assignment_Allocation].[Dev_Status] AS [Dev_Status], 
+      [vw_Assignment_Allocation].[06/17/2016] AS [06/17/2016], 
+      [vw_Assignment_Allocation].[06/24/2016] AS [06/24/2016], 
+      [vw_Assignment_Allocation].[07/01/2016] AS [07/01/2016], 
+      [vw_Assignment_Allocation].[07/08/2016] AS [07/08/2016], 
+      [vw_Assignment_Allocation].[07/15/2016] AS [07/15/2016], 
+      [vw_Assignment_Allocation].[07/22/2016] AS [07/22/2016]
+      FROM [bs].[vw_Assignment_Allocation] AS [vw_Assignment_Allocation]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Assignment_Allocation_Assignments" Association="AllocationModel.Store.FK_Assignment_Allocation_Assignments">
+            <End Role="Assignments" EntitySet="Assignments" />
+            <End Role="Assignment_Allocation" EntitySet="Assignment_Allocation" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Assignment_Allocation">
+          <Key>
+            <PropertyRef Name="Allocation_ID" />
+          </Key>
+          <Property Name="Allocation_ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Assignment_ID" Type="int" Nullable="false" />
+          <Property Name="Week_Ending" Type="date" Nullable="false" />
+          <Property Name="Hrs" Type="float" Nullable="false" />
+          <Property Name="Add_Date" Type="datetime" Nullable="false" />
+          <Property Name="Change_Date" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Assignments">
+          <Key>
+            <PropertyRef Name="Assignment_ID" />
+          </Key>
+          <Property Name="Assignment_ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="PTR" Type="int" Nullable="false" />
+          <Property Name="Client" Type="varchar" MaxLength="100" />
+          <Property Name="Product" Type="varchar" MaxLength="100" />
+          <Property Name="Priority" Type="varchar" MaxLength="10" />
+          <Property Name="Affected_Areas" Type="varchar" MaxLength="500" />
+          <Property Name="Dev_Estimate" Type="float" />
+          <Property Name="Dev_Due_Date" Type="datetime" />
+          <Property Name="Dev_Status" Type="varchar" MaxLength="50" />
+          <Property Name="Developer" Type="varchar" Nullable="false" MaxLength="100" />
+          <Property Name="Dev_Role" Type="varchar" MaxLength="100" />
+          <Property Name="Dev_Assigned" Type="bit" Nullable="false" />
+          <Property Name="Hrs_Completed" Type="float" />
+          <Property Name="Hrs_Remaining" Type="float" />
+          <Property Name="Release_Date" Type="datetime" />
+          <Property Name="Add_Date" Type="datetime" Nullable="false" />
+          <Property Name="Enhancement" Type="text" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Resources">
+          <Key>
+            <PropertyRef Name="Resource_ID" />
+          </Key>
+          <Property Name="Resource_ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Resource_Name" Type="varchar" Nullable="false" MaxLength="100" />
+          <Property Name="Resource_Role" Type="varchar" Nullable="false" MaxLength="100" />
+          <Property Name="Add_Date" Type="datetime" Nullable="false" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WeekEnding">
+          <Key>
+            <PropertyRef Name="Week_Ending_ID" />
+          </Key>
+          <Property Name="Week_Ending" Type="date" Nullable="false" />
+          <Property Name="Week_Ending_ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Week_Ending_Text" Type="varchar" MaxLength="30" StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'ETL_Config.bs.vw_Assignment_Allocation' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="vw_Assignment_Allocation">
+          <Key>
+            <PropertyRef Name="Assignment_ID" />
+            <PropertyRef Name="Developer" />
+            <PropertyRef Name="PTR" />
+          </Key>
+          <Property Name="Assignment_ID" Type="int" Nullable="false" />
+          <Property Name="Developer" Type="varchar" Nullable="false" MaxLength="100" />
+          <Property Name="PTR" Type="int" Nullable="false" />
+          <Property Name="Client" Type="varchar" MaxLength="100" />
+          <Property Name="Priority" Type="varchar" MaxLength="10" />
+          <Property Name="Dev_Due_Date" Type="varchar" MaxLength="30" />
+          <Property Name="Dev_Estimate" Type="float" />
+          <Property Name="Hrs_Completed" Type="float" />
+          <Property Name="Hrs_Remaining" Type="float" />
+          <Property Name="Dev_Status" Type="varchar" MaxLength="50" />
+          <Property Name="06/17/2016" Type="float" />
+          <Property Name="06/24/2016" Type="float" />
+          <Property Name="07/01/2016" Type="float" />
+          <Property Name="07/08/2016" Type="float" />
+          <Property Name="07/15/2016" Type="float" />
+          <Property Name="07/22/2016" Type="float" />
+        </EntityType>
+        <Association Name="FK_Assignment_Allocation_Assignments">
+          <End Role="Assignments" Type="AllocationModel.Store.Assignments" Multiplicity="1" />
+          <End Role="Assignment_Allocation" Type="AllocationModel.Store.Assignment_Allocation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Assignments">
+              <PropertyRef Name="Assignment_ID" />
+            </Principal>
+            <Dependent Role="Assignment_Allocation">
+              <PropertyRef Name="Assignment_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="upds_Assignment_Allocation_Update" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="bs">
+          <Parameter Name="Allocation_ID" Type="int" Mode="In" />
+          <Parameter Name="Assignment_ID" Type="int" Mode="In" />
+          <Parameter Name="Week_Ending" Type="date" Mode="In" />
+          <Parameter Name="Hrs" Type="float" Mode="In" />
+        </Function>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="AllocationModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="AllocationEntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="Assignment_Allocation" EntityType="AllocationModel.Assignment_Allocation" />
+          <EntitySet Name="Assignments" EntityType="AllocationModel.Assignment" />
+          <EntitySet Name="Resources" EntityType="AllocationModel.Resource" />
+          <AssociationSet Name="FK_Assignment_Allocation_Assignments" Association="AllocationModel.FK_Assignment_Allocation_Assignments">
+            <End Role="Assignments" EntitySet="Assignments" />
+            <End Role="Assignment_Allocation" EntitySet="Assignment_Allocation" />
+          </AssociationSet>
+          <EntitySet Name="vw_Assignment_Allocation" EntityType="AllocationModel.vw_Assignment_Allocation" />
+          <EntitySet Name="WeekEnding" EntityType="AllocationModel.WeekEnding" />
+          <FunctionImport Name="upds_Assignment_Allocation_Update">
+            <Parameter Name="Allocation_ID" Mode="In" Type="Int32" />
+            <Parameter Name="Assignment_ID" Mode="In" Type="Int32" />
+            <Parameter Name="Week_Ending" Mode="In" Type="DateTime" />
+            <Parameter Name="Hrs" Mode="In" Type="Double" />
+          </FunctionImport>
+        </EntityContainer>
+        <EntityType Name="Assignment_Allocation">
+          <Key>
+            <PropertyRef Name="Allocation_ID" />
+          </Key>
+          <Property Name="Allocation_ID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Assignment_ID" Type="Int32" Nullable="false" />
+          <Property Name="Week_Ending" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Hrs" Type="Double" Nullable="false" />
+          <Property Name="Add_Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Change_Date" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Assignment" Relationship="AllocationModel.FK_Assignment_Allocation_Assignments" FromRole="Assignment_Allocation" ToRole="Assignments" />
+        </EntityType>
+        <EntityType Name="Assignment">
+          <Key>
+            <PropertyRef Name="Assignment_ID" />
+          </Key>
+          <Property Name="Assignment_ID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="PTR" Type="Int32" Nullable="false" />
+          <Property Name="Client" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
+          <Property Name="Product" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
+          <Property Name="Priority" Type="String" MaxLength="10" Unicode="false" FixedLength="false" />
+          <Property Name="Affected_Areas" Type="String" MaxLength="500" Unicode="false" FixedLength="false" />
+          <Property Name="Dev_Estimate" Type="Double" />
+          <Property Name="Dev_Due_Date" Type="DateTime" Precision="3" />
+          <Property Name="Dev_Status" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
+          <Property Name="Developer" Type="String" Nullable="false" MaxLength="100" Unicode="false" FixedLength="false" />
+          <Property Name="Dev_Role" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
+          <Property Name="Dev_Assigned" Type="Boolean" Nullable="false" />
+          <Property Name="Hrs_Completed" Type="Double" />
+          <Property Name="Hrs_Remaining" Type="Double" />
+          <Property Name="Release_Date" Type="DateTime" Precision="3" />
+          <Property Name="Add_Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Enhancement" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Assignment_Allocation" Relationship="AllocationModel.FK_Assignment_Allocation_Assignments" FromRole="Assignments" ToRole="Assignment_Allocation" />
+        </EntityType>
+        <EntityType Name="Resource">
+          <Key>
+            <PropertyRef Name="Resource_ID" />
+          </Key>
+          <Property Name="Resource_ID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Resource_Name" Type="String" Nullable="false" MaxLength="100" Unicode="false" FixedLength="false" />
+          <Property Name="Resource_Role" Type="String" Nullable="false" MaxLength="100" Unicode="false" FixedLength="false" />
+          <Property Name="Add_Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Assignment_Allocation_Assignments">
+          <End Role="Assignments" Type="AllocationModel.Assignment" Multiplicity="1" />
+          <End Role="Assignment_Allocation" Type="AllocationModel.Assignment_Allocation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Assignments">
+              <PropertyRef Name="Assignment_ID" />
+            </Principal>
+            <Dependent Role="Assignment_Allocation">
+              <PropertyRef Name="Assignment_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="vw_Assignment_Allocation">
+          <Key>
+            <PropertyRef Name="Assignment_ID" />
+            <PropertyRef Name="Developer" />
+            <PropertyRef Name="PTR" />
+          </Key>
+          <Property Type="Int32" Name="Assignment_ID" Nullable="false" />
+          <Property Type="String" Name="Developer" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="PTR" Nullable="false" />
+          <Property Type="String" Name="Client" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Priority" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Dev_Due_Date" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Type="Double" Name="Dev_Estimate" />
+          <Property Type="Double" Name="Hrs_Completed" />
+          <Property Type="String" Name="Dev_Status" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Double" Name="C06_17_2016" />
+          <Property Type="Double" Name="C06_24_2016" />
+          <Property Type="Double" Name="C07_01_2016" />
+          <Property Type="Double" Name="C07_08_2016" />
+          <Property Type="Double" Name="C07_15_2016" />
+          <Property Type="Double" Name="C07_22_2016" />
+          <Property Type="Double" Name="Hrs_Remaining" />
+        </EntityType>
+        <EntityType Name="WeekEnding">
+          <Key>
+            <PropertyRef Name="Week_Ending_ID" />
+          </Key>
+          <Property Type="DateTime" Name="Week_Ending" Nullable="false" Precision="0" />
+          <Property Type="Int32" Name="Week_Ending_ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Week_Ending_Text" MaxLength="30" FixedLength="false" Unicode="false" annotation:StoreGeneratedPattern="Computed" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="AllocationModelStoreContainer" CdmEntityContainer="AllocationEntities">
+          <EntitySetMapping Name="Assignment_Allocation">
+            <EntityTypeMapping TypeName="AllocationModel.Assignment_Allocation">
+              <MappingFragment StoreEntitySet="Assignment_Allocation">
+                <ScalarProperty Name="Allocation_ID" ColumnName="Allocation_ID" />
+                <ScalarProperty Name="Assignment_ID" ColumnName="Assignment_ID" />
+                <ScalarProperty Name="Week_Ending" ColumnName="Week_Ending" />
+                <ScalarProperty Name="Hrs" ColumnName="Hrs" />
+                <ScalarProperty Name="Add_Date" ColumnName="Add_Date" />
+                <ScalarProperty Name="Change_Date" ColumnName="Change_Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Assignments">
+            <EntityTypeMapping TypeName="AllocationModel.Assignment">
+              <MappingFragment StoreEntitySet="Assignments">
+                <ScalarProperty Name="Assignment_ID" ColumnName="Assignment_ID" />
+                <ScalarProperty Name="PTR" ColumnName="PTR" />
+                <ScalarProperty Name="Client" ColumnName="Client" />
+                <ScalarProperty Name="Product" ColumnName="Product" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="Affected_Areas" ColumnName="Affected_Areas" />
+                <ScalarProperty Name="Dev_Estimate" ColumnName="Dev_Estimate" />
+                <ScalarProperty Name="Dev_Due_Date" ColumnName="Dev_Due_Date" />
+                <ScalarProperty Name="Dev_Status" ColumnName="Dev_Status" />
+                <ScalarProperty Name="Developer" ColumnName="Developer" />
+                <ScalarProperty Name="Dev_Role" ColumnName="Dev_Role" />
+                <ScalarProperty Name="Dev_Assigned" ColumnName="Dev_Assigned" />
+                <ScalarProperty Name="Hrs_Completed" ColumnName="Hrs_Completed" />
+                <ScalarProperty Name="Hrs_Remaining" ColumnName="Hrs_Remaining" />
+                <ScalarProperty Name="Release_Date" ColumnName="Release_Date" />
+                <ScalarProperty Name="Add_Date" ColumnName="Add_Date" />
+                <ScalarProperty Name="Enhancement" ColumnName="Enhancement" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Resources">
+            <EntityTypeMapping TypeName="AllocationModel.Resource">
+              <MappingFragment StoreEntitySet="Resources">
+                <ScalarProperty Name="Resource_ID" ColumnName="Resource_ID" />
+                <ScalarProperty Name="Resource_Name" ColumnName="Resource_Name" />
+                <ScalarProperty Name="Resource_Role" ColumnName="Resource_Role" />
+                <ScalarProperty Name="Add_Date" ColumnName="Add_Date" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vw_Assignment_Allocation">
+            <EntityTypeMapping TypeName="AllocationModel.vw_Assignment_Allocation">
+              <MappingFragment StoreEntitySet="vw_Assignment_Allocation">
+                <ScalarProperty Name="Hrs_Remaining" ColumnName="Hrs_Remaining" />
+                <ScalarProperty Name="C07_22_2016" ColumnName="07/22/2016" />
+                <ScalarProperty Name="C07_15_2016" ColumnName="07/15/2016" />
+                <ScalarProperty Name="C07_08_2016" ColumnName="07/08/2016" />
+                <ScalarProperty Name="C07_01_2016" ColumnName="07/01/2016" />
+                <ScalarProperty Name="C06_24_2016" ColumnName="06/24/2016" />
+                <ScalarProperty Name="C06_17_2016" ColumnName="06/17/2016" />
+                <ScalarProperty Name="Dev_Status" ColumnName="Dev_Status" />
+                <ScalarProperty Name="Hrs_Completed" ColumnName="Hrs_Completed" />
+                <ScalarProperty Name="Dev_Estimate" ColumnName="Dev_Estimate" />
+                <ScalarProperty Name="Dev_Due_Date" ColumnName="Dev_Due_Date" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="Client" ColumnName="Client" />
+                <ScalarProperty Name="PTR" ColumnName="PTR" />
+                <ScalarProperty Name="Developer" ColumnName="Developer" />
+                <ScalarProperty Name="Assignment_ID" ColumnName="Assignment_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WeekEnding">
+            <EntityTypeMapping TypeName="AllocationModel.WeekEnding">
+              <MappingFragment StoreEntitySet="WeekEnding">
+                <ScalarProperty Name="Week_Ending_Text" ColumnName="Week_Ending_Text" />
+                <ScalarProperty Name="Week_Ending_ID" ColumnName="Week_Ending_ID" />
+                <ScalarProperty Name="Week_Ending" ColumnName="Week_Ending" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="upds_Assignment_Allocation_Update" FunctionName="AllocationModel.Store.upds_Assignment_Allocation_Update" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="False" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    JSON Response: <div id="jsonResponseText"></div><br />
+
+    XML Response: <div id="xmlResponseText"></div><br />
+
+    <script type="text/javascript" src="http://www.jocys.com/Common/JsClasses/System.debug.js"></script>
+    <script type="text/javascript" src="http://www.jocys.com/Common/JsClasses/System.IO.debug.js"></script>
+    <script type="text/javascript" src="http://www.jocys.com/Common/JsClasses/System.Text.debug.js"></script>
+    <script type="text/javascript" src="http://www.jocys.com/Common/JsClasses/System.Convert.debug.js"></script>
+    <script type="text/javascript" src="http://www.jocys.com/Common/JsClasses/System.BitConverter.debug.js"></script>
+    <script type="text/javascript" src="http://www.jocys.com/Common/JsClasses/System.BigInt.debug.js"></script>
+    <script type="text/javascript" src="http://www.jocys.com/Common/JsClasses/System.Security.Cryptography.SHA1.debug.js"></script>
+    <script type="text/javascript" src="http://www.jocys.com/Common/JsClasses/System.Security.Cryptography.debug.js"></script>
+    <script type="text/javascript" src="http://www.jocys.com/Common/JsClasses/System.Security.Cryptography.RSA.debug.js"></script>
+    
+
+    <script>
+
+        //Variable to hold the key
+        //"<RSAKeyValue><Modulus>3nAtE8P3qmYFQSpAMth8dTewX8g5b17RiLifYqEMKeh51SthXeIA2uGhGnwFldk7ukvoUzyNfPy8TyiJwRfjgQ==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>"
+        var _rsaKey;
+
+        function getRSAKey() {
+
+            var xmlhttp = new XMLHttpRequest();
+            var url = "http://localhost:48882/RESTService.svc/32179AAE-701F-43AC-8E76-68B1553584D4/rsakey";
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    _rsaKey = xmlhttp.responseText;
+
+                    //Make the requests
+                    xmlRequest();
+                    jsonRequest();                    
+
+                }
+            }
+
+            xmlhttp.open("GET", url, true);
+            xmlhttp.setRequestHeader("Content-Type", "application/xml;charset=UTF-8");
+            xmlhttp.send();
+
+        }
+
+        function jsonRequest() {
+
+            document.getElementById("jsonResponseText").innerHTML = "Processing....";
+
+            var decryptedBytes = System.Text.Encoding.UTF8.GetBytes("Test Value");
+            var rsa = new System.Security.Cryptography.RSACryptoServiceProvider(256);            //Set the RSA Key value            rsa.FromXmlString(_rsaKey);            //Use OAEP padding            var encryptedBytes = rsa.Encrypt(decryptedBytes, true);
+
+            //Get encrypted string
+            var encryptedString = System.Convert.ToBase64String(encryptedBytes)
+
+
+            var xmlhttp = new XMLHttpRequest();
+            var url = "http://localhost:48882/RESTService.svc/32179AAE-701F-43AC-8E76-68B1553584D4/json";
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    parseJSONResponse(xmlhttp.responseText);                    
+                }
+            }
+
+            xmlhttp.open("PUT", url, true);
+            xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xmlhttp.send("{\"Action\":\"Referral\",\"Data\":\"" + encryptedString + "\"}");
+
+        }          
+
+        function parseJSONResponse(response) {
+            alert(response);
+            var arr = JSON.parse(response);
+            var i;
+            var out = "<table>";
+
+            out += "<tr><td>Data</td><td>" + arr.Data + "</td></tr>"
+            out += "<tr><td>Error Message</td><td>" + arr.ErrorMessage + "</td></tr>"
+            out += "<tr><td>Error Number</td><td>" + arr.ErrorNumber + "</td></tr>"
+            out += "<tr><td>Is Successful</td><td>" + arr.IsSuccessful + "</td></tr>"
+            out += "</table>";
+            out += "<p>" + response + "</p>"
+            document.getElementById("jsonResponseText").innerHTML = out;
+        }
+
+        function xmlRequest() {
+
+            document.getElementById("xmlResponseText").innerHTML = "Processing....";
+
+            var decryptedBytes = System.Text.Encoding.UTF8.GetBytes("Test Value");
+            var rsa = new System.Security.Cryptography.RSACryptoServiceProvider(256);            //Set the RSA Key value            rsa.FromXmlString(_rsaKey);            //Use OAEP padding            var encryptedBytes = rsa.Encrypt(decryptedBytes, true);
+
+            //Get encrypted string
+            var encryptedString = System.Convert.ToBase64String(encryptedBytes)
+
+            var xmlhttp = new XMLHttpRequest();
+            var url = "http://localhost:48882/RESTService.svc/32179AAE-701F-43AC-8E76-68B1553584D4/xml";
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    parseXMLResponse(xmlhttp.responseText);
+                } else if (xmlhttp.readyState == 4 && xmlhttp.status == 400) {
+                    alert("Bad Request");
+                    alert(xmlhttp.responseText);
+                }
+            }
+
+            var xmlpacket = "<?xml version=\"1.0\" encoding=\"utf-8\" ?><Request xmlns=\"http://dataservice.lashgroup.com/Request\"><Action>Referral</Action><Data>" + encryptedString + "</Data></Request>";
+
+            xmlhttp.open("PUT", url, true);
+            xmlhttp.setRequestHeader("Content-Type", "application/xml;charset=UTF-8");
+            xmlhttp.send(xmlpacket);
+
+        }
+
+        function parseXMLResponse(response) {
+            //var arr = JSON.parse(response);
+            //var i;
+            var out = "<p><textarea>" + response + "</textarea></p>"
+            document.getElementById("xmlResponseText").innerHTML = out;
+        }
+
+
+        //Run it
+        getRSAKey();
+
+    </script>
+    
+</body>
+</html>

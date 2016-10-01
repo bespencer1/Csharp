@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Time Allocation</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+
+    
+</head>
+<body>
+    <div ng-app="myApp" ng-controller="myCtrl">
+        <h3>Developer: <select ng-model="selectedDeveloper" ng-options="x.Resource_Name for x in resources" ng-change="getAllocation()"></select></h3>
+            <h3>Assignments:</h3>
+            <table>
+                <tr>
+                    <th ng-repeat="column in columns">{{column.name}}</th>
+                </tr>
+                <tr ng-repeat="x in allocations">
+                    <td ng-repeat="column in columns">
+                        <div ng-if="column.format == 'hoursInput'">
+                            <input type="number" ng-model="x[column.value]" value="{{x[column.value]}}" required class="hrEntry" />
+                        </div>
+                        <div ng-if="column.format != 'hoursInput'">
+                            {{x[column.value]}}
+                        </div>
+                </tr>
+            </table>
+        <p>
+            <input type="button" ng-click="saveAllocation()" value="Save" />
+        </p>
+
+    </div>
+    <script src='app/main.js'></script>
+</body>
+</html>
