@@ -62,7 +62,11 @@
     <Content Include="jsencrypt.js" />
     <Content Include="JSONTest.html" />
     <Content Include="RESTService.svc" />
-    <Content Include="Web.config" />
+    <Content Include="scripts\aes.js" />
+    <Content Include="scripts\pbkdf2.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="XMLTest.svc" />
   </ItemGroup>
   <ItemGroup>
@@ -80,6 +84,7 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Properties\PublishProfiles\LashGroup.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

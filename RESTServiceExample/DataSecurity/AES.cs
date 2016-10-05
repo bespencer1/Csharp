@@ -127,6 +127,7 @@ namespace DataSecurity
                 using (RijndaelManaged aesAlg = new RijndaelManaged())
                 {
                     aesAlg.Mode = CipherMode.CBC;
+                    aesAlg.Padding = PaddingMode.PKCS7;
 
                     //PasswordDeriveBytes password = new PasswordDeriveBytes(_passPhrase, saltValueBytes, _hashAlgorithm, _passwordIterations);
                     //byte[] keyBytes = password.GetBytes(_keySize / 8);
@@ -186,6 +187,7 @@ namespace DataSecurity
             {
                 aesAlg = new RijndaelManaged();
                 aesAlg.Mode = CipherMode.CBC;
+                aesAlg.Padding = PaddingMode.PKCS7;
 
                 ICryptoTransform decryptor = aesAlg.CreateDecryptor(keyBytes, initVectorBytes);
 

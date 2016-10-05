@@ -136,16 +136,5 @@ namespace RESTServiceExample
 
         }
 
-        //private AESKey GetKey(string key)
-        //{
-        //    AESKey aesKey = new AESKey();
-
-        //    //Deserialize the XML to the Error class.
-        //    XmlSerializer ser = new XmlSerializer(typeof(AESKey));
-        //    AESKey errorResponse = (AESKey)ser.Deserialize(new StringReader(key)); 
-
-        //    return aesKey;
-        //}
-
     }
 }

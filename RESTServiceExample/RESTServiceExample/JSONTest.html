@@ -18,12 +18,17 @@
     <script type="text/javascript" src="http://www.jocys.com/Common/JsClasses/System.Security.Cryptography.debug.js"></script>
     <script type="text/javascript" src="http://www.jocys.com/Common/JsClasses/System.Security.Cryptography.RSA.debug.js"></script>
     
+    <script type="text/javascript" src="/scripts/aes.js"></script>
+    <script type="text/javascript" src="/scripts/pbkdf2.js"></script>
 
     <script>
 
         //Variable to hold the key
-        //"<RSAKeyValue><Modulus>3nAtE8P3qmYFQSpAMth8dTewX8g5b17RiLifYqEMKeh51SthXeIA2uGhGnwFldk7ukvoUzyNfPy8TyiJwRfjgQ==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>"
         var _rsaKey;
+        var _iv = "1234567812345678";
+        var _password = "AESPassword20160925BrianSpencer!";
+        var _salt = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        var _key;
 
         function getRSAKey() {
 
@@ -33,6 +38,8 @@
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     _rsaKey = xmlhttp.responseText;
+
+                    //_rsaKey = "<RSAKeyValue><Modulus>3nAtE8P3qmYFQSpAMth8dTewX8g5b17RiLifYqEMKeh51SthXeIA2uGhGnwFldk7ukvoUzyNfPy8TyiJwRfjgQ==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>";
 
                     //Make the requests
                     xmlRequest();
@@ -47,16 +54,63 @@
 
         }
 
+        function AESEncrypt(data) {
+            var encryptedText = null;
+            try {
+                //Creating the Vector Key
+                var iv = CryptoJS.enc.Utf8.parse(_iv);
+
+                //Creating the key in PBKDF2 format to be used during the decryption
+                _key = CryptoJS.PBKDF2(_password, _salt, { keySize: 256 / 32, iterations: 1 });
+
+                //Encrypting the string contained in cipherParams using the PBKDF2 key
+                var encrypted = CryptoJS.AES.encrypt(data, _key, { mode: CryptoJS.mode.CBC, iv: iv, padding: CryptoJS.pad.Pkcs7 });
+                encryptedText = encrypted.ciphertext.toString(CryptoJS.enc.Base64);
+
+                return encryptedText;
+            }
+            //Malformed UTF Data due to incorrect password
+            catch (err) {
+                alert(err);
+                return "";
+            }
+        }
+
+        function AESDecrypt(encryptedData) {
+            var decryptedText = null;
+            try {
+                //Creating the Vector Key
+                //var iv = CryptoJS.enc.Hex.parse(_iv);
+                var iv = CryptoJS.enc.Utf8.parse(_iv);
+
+                //Enclosing the test to be decrypted in a CipherParams object as supported by the CryptoJS libarary
+                var cipherParams = CryptoJS.lib.CipherParams.create({
+                    ciphertext: CryptoJS.enc.Base64.parse(encryptedData)
+                });
+
+                //Decrypting the string contained in cipherParams using the PBKDF2 key
+                var decrypted = CryptoJS.AES.decrypt(cipherParams, _key, { mode: CryptoJS.mode.CBC, iv: iv, padding: CryptoJS.pad.Pkcs7 });
+                decryptedText = decrypted.toString(CryptoJS.enc.Utf8);
+
+                return decryptedText;
+            }
+            //Malformed UTF Data due to incorrect password
+            catch (err) {
+                return "";
+            }
+        }
+
         function jsonRequest() {
 
-            document.getElementById("jsonResponseText").innerHTML = "Processing....";
+            document.getElementById("jsonResponseText").innerHTML = "Processing....";            
 
-            var decryptedBytes = System.Text.Encoding.UTF8.GetBytes("Test Value");
-            var rsa = new System.Security.Cryptography.RSACryptoServiceProvider(256);            //Set the RSA Key value            rsa.FromXmlString(_rsaKey);            //Use OAEP padding            var encryptedBytes = rsa.Encrypt(decryptedBytes, true);
+            //RSA
+            var rsa = new System.Security.Cryptography.RSACryptoServiceProvider(256);            rsa.FromXmlString(_rsaKey);
 
-            //Get encrypted string
-            var encryptedString = System.Convert.ToBase64String(encryptedBytes)
-
+            //Get encrypted string            
+            var encryptedString = AESEncrypt("123456789012345678901234567890");
+            var encryptedIV = System.Convert.ToBase64String(rsa.Encrypt(System.Text.Encoding.UTF8.GetBytes(_iv), true)); //Use OAEP padding
+            var encryptedKey = System.Convert.ToBase64String(rsa.Encrypt(System.Text.Encoding.UTF8.GetBytes(_key.toString(CryptoJS.enc.Base64)), true)); //Use OAEP padding            
 
             var xmlhttp = new XMLHttpRequest();
             var url = "http://localhost:48882/RESTService.svc/32179AAE-701F-43AC-8E76-68B1553584D4/json";
@@ -69,17 +123,17 @@
 
             xmlhttp.open("PUT", url, true);
             xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-            xmlhttp.send("{\"Action\":\"Referral\",\"Data\":\"" + encryptedString + "\"}");
+            xmlhttp.send("{\"Action\":\"Referral\",\"Data\":\"" + encryptedString + "\",\"IV\":\"" + encryptedIV + "\",\"Key\":\"" + encryptedKey + "\"}");
 
         }          
 
         function parseJSONResponse(response) {
-            alert(response);
+
             var arr = JSON.parse(response);
             var i;
             var out = "<table>";
 
-            out += "<tr><td>Data</td><td>" + arr.Data + "</td></tr>"
+            out += "<tr><td>Data</td><td>" + AESDecrypt(arr.Data) + "</td></tr>"
             out += "<tr><td>Error Message</td><td>" + arr.ErrorMessage + "</td></tr>"
             out += "<tr><td>Error Number</td><td>" + arr.ErrorNumber + "</td></tr>"
             out += "<tr><td>Is Successful</td><td>" + arr.IsSuccessful + "</td></tr>"
@@ -92,11 +146,11 @@
 
             document.getElementById("xmlResponseText").innerHTML = "Processing....";
 
-            var decryptedBytes = System.Text.Encoding.UTF8.GetBytes("Test Value");
-            var rsa = new System.Security.Cryptography.RSACryptoServiceProvider(256);            //Set the RSA Key value            rsa.FromXmlString(_rsaKey);            //Use OAEP padding            var encryptedBytes = rsa.Encrypt(decryptedBytes, true);
-
-            //Get encrypted string
-            var encryptedString = System.Convert.ToBase64String(encryptedBytes)
+            var rsa = new System.Security.Cryptography.RSACryptoServiceProvider(256);            rsa.FromXmlString(_rsaKey);
+            //Get encrypted string            
+            var encryptedString = AESEncrypt("123456789012345678901234567890");
+            var encryptedIV = System.Convert.ToBase64String(rsa.Encrypt(System.Text.Encoding.UTF8.GetBytes(_iv), true)); //Use OAEP padding
+            var encryptedKey = System.Convert.ToBase64String(rsa.Encrypt(System.Text.Encoding.UTF8.GetBytes(_key.toString(CryptoJS.enc.Base64)), true)); //Use OAEP padding            
 
             var xmlhttp = new XMLHttpRequest();
             var url = "http://localhost:48882/RESTService.svc/32179AAE-701F-43AC-8E76-68B1553584D4/xml";
@@ -110,7 +164,7 @@
                 }
             }
 
-            var xmlpacket = "<?xml version=\"1.0\" encoding=\"utf-8\" ?><Request xmlns=\"http://dataservice.lashgroup.com/Request\"><Action>Referral</Action><Data>" + encryptedString + "</Data></Request>";
+            var xmlpacket = "<?xml version=\"1.0\" encoding=\"utf-8\" ?><Request xmlns=\"http://dataservice.lashgroup.com/Request\"><Action>Referral</Action><Data>" + encryptedString + "</Data><IV>" + encryptedIV + "</IV><Key>" + encryptedKey + "</Key></Request>";
 
             xmlhttp.open("PUT", url, true);
             xmlhttp.setRequestHeader("Content-Type", "application/xml;charset=UTF-8");
